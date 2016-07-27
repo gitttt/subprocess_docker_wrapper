@@ -10,15 +10,13 @@ os.environ['HTTP_PROXY']=''
 # Enable tcp service to allow non-root communication with docker daemon
 #sudo service docker stop
 #sudo docker --daemon=true -H tcp://127.0.0.1:2376
+#sudo docker --daemon=true -H tcp://127.0.0.1:2376 -d --bip=172.17.42.1/16
 DOCKER = ['docker', '-H', '127.0.0.1:2376']
 #DOCKER = ['docker']
         
 
 def docker_run_rm(container_name, image_name, *exec_command):
-    # TODO:  
-    #if keep_live:
-    #    docker_command.extend(['-t'])    
-    docker_command = []
+    docker_command = []  
     docker_command.extend(DOCKER)    
     docker_command.extend(['run', '--rm', '--name', container_name, image_name])
     docker_command.extend(exec_command)
@@ -94,6 +92,7 @@ def docker_create(container_name, image_name, keep_live=False, shared_directory=
         docker_command.extend(['--volume=' + shared_directory + ':/shared_with_docker_host'])
     docker_command.extend(['--name', container_name, image_name])
     try:
+        print docker_command
         out = subprocess.check_output(docker_command)
     except subprocess.CalledProcessError as e:
         print "Status: FAIL", e.returncode, e.output
