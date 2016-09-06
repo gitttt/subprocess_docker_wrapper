@@ -67,6 +67,7 @@ def docker_ps_a():
     err = p.stderr.read()
     print err     
 
+
 def docker_images():
     docker_command = []
     docker_command.extend(DOCKER)
@@ -76,12 +77,13 @@ def docker_images():
     #print out
     #err = p.stderr.read()
     #print err 
-    
+
     image_names = re.findall(r'^(.*?)\s', out, re.MULTILINE)
     image_names.pop(0)  # remove the 'REPOSITORY' column header from the list
-    #print image_names
+    print image_names
     return image_names
-    
+
+
 def docker_create(container_name, image_name, keep_live=False, shared_directory=None):
     docker_command = []
     docker_command.extend(DOCKER)
@@ -112,7 +114,8 @@ def docker_start(container_name):
         sys.exit(1)
     else:
         print out
-        
+
+
 def docker_stop(container_name):
     docker_command = []
     docker_command.extend(DOCKER)
@@ -122,7 +125,8 @@ def docker_stop(container_name):
     except subprocess.CalledProcessError as e:
         print "Status: FAIL", e.returncode, e.output
     else:
-        print out    
+        print out 
+
 
 def docker_exec(container_name, exec_command, *exec_command_arguments):
     docker_command = []
@@ -136,9 +140,12 @@ def docker_exec(container_name, exec_command, *exec_command_arguments):
         print "Status: FAIL", e.returncode, e.output
         sys.exit(1)
     else:
-        return out 
+        return out
+
 
 if __name__ == '__main__':
+    docker_images()
+    sys.exit()
     my_container_name = 'delme'
     #my_image_name = 'my_gcc_4_8_2_image:latest'
     my_image_name = 'ubuntu:14.04'
@@ -167,4 +174,3 @@ if __name__ == '__main__':
     docker_stop(my_container_name)
     docker_rm(my_container_name)
     docker_ps_a()
-    
